@@ -50,8 +50,4 @@ RUN phpenmod mcrypt
 RUN /usr/bin/curl -sS https://getcomposer.org/installer | /usr/bin/php
 RUN /bin/mv composer.phar /usr/local/bin/composer
 
-# Start script
-ADD ./start.sh /start.sh
-RUN chmod +x /start.sh
-
 CMD ["/bin/bash"]
