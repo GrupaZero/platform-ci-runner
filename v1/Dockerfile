@@ -42,6 +42,7 @@ RUN apt-get update && \
     rm -rf /usr/share/man/?? && \
     rm -rf /usr/share/man/??_*
 
+RUN echo "127.0.0.1       localunixsocket" >> /etc/hosts
 RUN curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
 RUN chmod +x docker-compose
 RUN mv docker-compose /usr/local/bin
