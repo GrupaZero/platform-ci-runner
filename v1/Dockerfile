@@ -7,7 +7,6 @@ ENV HOME /root
 ENV TERM xterm
 ENV DEBIAN_FRONTEND noninteractive
 ENV DOCKER_VERSION 1.12.5-0~ubuntu-xenial
-ENV DOCKER_COMPOSE_VERSION 1.9.0
 
 RUN apt-get update && \
     apt-get install -y software-properties-common apt-transport-https --no-install-recommends && \
@@ -43,9 +42,6 @@ RUN apt-get update && \
     rm -rf /usr/share/man/??_*
 
 RUN echo "127.0.0.1       localunixsocket" >> /etc/hosts
-RUN curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-RUN chmod +x docker-compose
-RUN mv docker-compose /usr/local/bin
 RUN phpenmod mcrypt
 
 RUN /usr/bin/curl -sS https://getcomposer.org/installer | /usr/bin/php
