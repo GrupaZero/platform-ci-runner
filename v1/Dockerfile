@@ -26,6 +26,7 @@ COPY entrypoint.sh /usr/local/bin/
 
 RUN curl -sS https://getcomposer.org/installer | /usr/local/bin/php
 RUN /bin/mv composer.phar /usr/local/bin/composer
+ENV COMPOSER_ALLOW_SUPERUSER 1
 
 ENTRYPOINT ["entrypoint.sh"]
 CMD ["sh"]
