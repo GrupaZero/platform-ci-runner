@@ -2,6 +2,9 @@ FROM php:7.1-alpine
 
 MAINTAINER Adrian Skierniewski <adrian.skierniewski@gmail.com>
 
+RUN apk add --no-cache libmcrypt-dev \
+    && docker-php-ext-install pdo pdo_mysql mcrypt
+
 ENV DOCKER_BUCKET get.docker.com
 ENV DOCKER_VERSION 1.12.5
 ENV DOCKER_SHA256 0058867ac46a1eba283e2441b1bb5455df846144f9d9ba079e97655399d4a2c6
