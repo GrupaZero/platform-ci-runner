@@ -2,8 +2,12 @@ FROM php:7.1-alpine
 
 MAINTAINER Adrian Skierniewski <adrian.skierniewski@gmail.com>
 
-RUN apk add --no-cache libmcrypt-dev \
-    && docker-php-ext-install pdo pdo_mysql mcrypt
+RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+    && apk add --no-cache libmcrypt-dev \
+    && docker-php-ext-install pdo pdo_mysql mcrypt \
+    && pecl install redis-3.1.0 \
+    && docker-php-ext-enable redis \
+    && apk del .build-deps
 
 ENV DOCKER_BUCKET get.docker.com
 ENV DOCKER_VERSION 1.12.5
