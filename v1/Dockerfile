@@ -47,4 +47,7 @@ RUN phpenmod mcrypt
 RUN /usr/bin/curl -sS https://getcomposer.org/installer | /usr/bin/php
 RUN /bin/mv composer.phar /usr/local/bin/composer
 
-CMD ["/bin/bash"]
+COPY entrypoint.sh /usr/local/bin/
+
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["sh"]
