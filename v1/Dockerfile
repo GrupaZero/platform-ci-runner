@@ -8,7 +8,7 @@ ENV DOCKER_SHA256 0058867ac46a1eba283e2441b1bb5455df846144f9d9ba079e97655399d4a2
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
-    && apk add --no-cache libmcrypt-dev \
+    && apk add --no-cache libmcrypt-dev ansible \
     && docker-php-ext-install pdo pdo_mysql mcrypt \
     && pecl install redis-3.1.0 \
     && docker-php-ext-enable redis \
@@ -21,6 +21,7 @@ RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
     && rmdir docker \
     && rm docker.tgz \
     && docker -v \
+    && ansible --version \
     && curl -sS https://getcomposer.org/installer | /usr/local/bin/php \
     && /bin/mv composer.phar /usr/local/bin/composer
 
