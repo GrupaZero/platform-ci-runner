@@ -8,7 +8,7 @@ ENV DOCKER_SHA256 0058867ac46a1eba283e2441b1bb5455df846144f9d9ba079e97655399d4a2
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS postgresql-dev \
-    && apk add --no-cache libmcrypt-dev libpq \
+    && apk add --no-cache libmcrypt-dev libpq git \
     && docker-php-ext-install pdo pdo_mysql pdo_pgsql pgsql mcrypt \
     && pecl install redis-3.1.1 \
     && docker-php-ext-enable redis \
