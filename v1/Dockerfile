@@ -10,7 +10,7 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 # Unfortunately we need build dependencies for npm install :(
 RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS postgresql-dev \
     && apk add --no-cache libmcrypt-dev libpq git nodejs autoconf make automake libtool g++ file zlib libpng-dev nasm \
-    && docker-php-ext-install gd pdo pdo_mysql pdo_pgsql pgsql mcrypt zip \
+    && docker-php-ext-install gd pdo pdo_mysql pdo_pgsql pgsql pcntl mcrypt zip \
     && pecl install redis-3.1.1 \
     && docker-php-ext-enable redis \
     && apk del .build-deps \
