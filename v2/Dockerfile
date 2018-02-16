@@ -60,5 +60,5 @@ COPY entrypoint.sh /usr/local/bin/
 RUN /usr/bin/curl -sS https://getcomposer.org/installer | /usr/bin/php \
   && /bin/mv composer.phar /usr/local/bin/composer
 
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["entrypoint.sh"]
 CMD ["sh"]
