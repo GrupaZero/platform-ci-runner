@@ -55,10 +55,10 @@ RUN apt-get update && \
     rm -rf /usr/share/man/?? && \
     rm -rf /usr/share/man/??_*
 
-COPY entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /usr/local/bin/
 
 RUN /usr/bin/curl -sS https://getcomposer.org/installer | /usr/bin/php \
-  && /bin/mv composer.phar /usr/local/bin/composer \
-  && chmod +x /entrypoint.sh
+  && /bin/mv composer.phar /usr/local/bin/composer
 
-CMD ["/bin/bash", "/entrypoint.sh"]
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["sh"]
