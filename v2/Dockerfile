@@ -6,6 +6,7 @@ MAINTAINER Adrian Skierniewski <adrian.skierniewski@gmail.com>
 ENV HOME /root
 ENV TERM xterm
 ENV DEBIAN_FRONTEND noninteractive
+ENV DOCKER_COMPOSE_VERSION 1.19.0
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
 RUN apt-get update && \
@@ -39,6 +40,8 @@ RUN apt-get update && \
       php7.2-redis \
       php7.2-zip \
       google-chrome-stable && \
+    curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose && \
+    chmod +x /usr/local/bin/docker-compose && \
     apt-get remove --purge -y software-properties-common apt-transport-https && \
     apt-get autoremove -y && \
     apt-get clean && \
