@@ -1,31 +1,60 @@
-FROM php:7.2-alpine
+FROM ubuntu:16.04
 
 MAINTAINER Adrian Skierniewski <adrian.skierniewski@gmail.com>
 
-ENV DOCKER_BUCKET get.docker.com
-ENV DOCKER_VERSION 17.05.0-ce
-ENV DOCKER_SHA256 340e0b5a009ba70e1b644136b94d13824db0aeb52e09071410f35a95d94316d9
+# Set correct environment variables
+ENV HOME /root
+ENV TERM xterm
+ENV DEBIAN_FRONTEND noninteractive
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
-# Unfortunately we need build dependencies for npm install :(
-RUN apk add --no-cache --virtual .build-deps $PHPIZE_DEPS postgresql-dev \
-    && apk add --no-cache libmcrypt-dev libpq git nodejs chromium autoconf make automake libtool g++ file zlib libpng-dev nasm \
-    && docker-php-ext-install gd pdo pdo_mysql pdo_pgsql pgsql pcntl zip \
-    && pecl install redis-3.1.6 \
-    && docker-php-ext-enable redis \
-    && apk del .build-deps \
-    && set -x \
-    && curl -fSL "https://${DOCKER_BUCKET}/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz" -o docker.tgz \
-    && echo "${DOCKER_SHA256} *docker.tgz" | sha256sum -c - \
-    && tar -xzvf docker.tgz \
-    && mv docker/* /usr/local/bin/ \
-    && rmdir docker \
-    && rm docker.tgz \
-    && docker -v \
-    && curl -sS https://getcomposer.org/installer | /usr/local/bin/php \
-    && /bin/mv composer.phar /usr/local/bin/composer
+RUN apt-get update && \
+    apt-get install -y software-properties-common apt-transport-https wget --no-install-recommends && \
+    wget -q -O - https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
+    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+    LANG=C.UTF-8 add-apt-repository ppa:ondrej/php && \
+    LANG=C.UTF-8 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && \
+    LANG=C.UTF-8 add-apt-repository "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+      docker-ce \
+      sudo \
+      curl \
+      nano \
+      git \
+      gettext \
+      php7.2-cli \
+      php7.2-common \
+      php7.2-curl \
+      php7.2-gd \
+      php7.2-intl \
+      php7.2-json \
+      php7.2-ldap \
+      php7.2-mbstring \
+      php7.2-pgsql \
+      php7.2-opcache \
+      php7.2-xdebug \
+      php7.2-xml \
+      php7.2-redis \
+      php7.2-zip \
+      google-chrome-stable && \
+    apt-get remove --purge -y software-properties-common apt-transport-https wget && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    apt-get autoclean && \
+    echo -n > /var/lib/apt/extended_states && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /etc/cron.d/* && \
+    rm -rf /etc/cron.hourly/* && \
+    rm -rf /etc/cron.daily/* && \
+    rm -rf /etc/cron.monthly/* && \
+    rm -rf /usr/share/man/?? && \
+    rm -rf /usr/share/man/??_*
 
-COPY entrypoint.sh /usr/local/bin/
+COPY entrypoint.sh /entrypoint.sh
 
-ENTRYPOINT ["entrypoint.sh"]
-CMD ["sh"]
+RUN /usr/bin/curl -sS https://getcomposer.org/installer | /usr/bin/php \
+  && /bin/mv composer.phar /usr/local/bin/composer \
+  && chmod +x /entrypoint.sh
+
+CMD ["/bin/bash", "/entrypoint.sh"]
