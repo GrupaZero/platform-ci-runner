@@ -38,7 +38,7 @@ RUN apt-get update && \
       php7.2-redis \
       php7.2-zip \
       google-chrome-stable && \
-    apt-get remove --purge -y software-properties-common apt-transport-https wget && \
+    apt-get remove --purge -y software-properties-common apt-transport-https && \
     apt-get autoremove -y && \
     apt-get clean && \
     apt-get autoclean && \
