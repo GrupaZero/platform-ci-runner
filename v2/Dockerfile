@@ -22,6 +22,7 @@ RUN apt-get update && \
       curl \
       nano \
       git \
+      iproute2 \
       gettext \
       php7.2-cli \
       php7.2-common \
