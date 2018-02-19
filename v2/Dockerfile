@@ -78,7 +78,7 @@ RUN /usr/bin/curl -sS https://getcomposer.org/installer | /usr/bin/php \
   && chmod +x /start.sh \
   && mv /var/www/html /var/www/public \
   && mv /var/www/public/index.nginx-debian.html /var/www/public/index.html \
-  && mkfifo $LARAVEL_LOG_STREAM \
+  && touch $LARAVEL_LOG_STREAM \
   && chmod 777 $LARAVEL_LOG_STREAM
 
 CMD ["/bin/bash", "/start.sh"]
