@@ -7,6 +7,7 @@ ENV HOME /root
 ENV TERM xterm
 ENV DEBIAN_FRONTEND noninteractive
 ENV COMPOSER_ALLOW_SUPERUSER 1
+ENV LARAVEL_LOG_STREAM="/tmp/laravel.log"
 
 RUN apt-get update && \
     apt-get install -y software-properties-common apt-transport-https wget --no-install-recommends && \
@@ -76,8 +77,8 @@ RUN /usr/bin/curl -sS https://getcomposer.org/installer | /usr/bin/php \
   && /bin/mv composer.phar /usr/local/bin/composer \
   && chmod +x /start.sh \
   && mv /var/www/html /var/www/public \
-  && mv /var/www/public/index.nginx-debian.html /var/www/public/index.html
-
-EXPOSE 80
+  && mv /var/www/public/index.nginx-debian.html /var/www/public/index.html \
+  && mkfifo $LARAVEL_LOG_STREAM \
+  && chmod 777 $LARAVEL_LOG_STREAM
 
 CMD ["/bin/bash", "/start.sh"]
