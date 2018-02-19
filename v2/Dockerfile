@@ -80,5 +80,4 @@ RUN /usr/bin/curl -sS https://getcomposer.org/installer | /usr/bin/php \
 
 EXPOSE 80
 
-ENTRYPOINT ["/start.sh"]
-CMD ["/bin/bash"]
+CMD ["/bin/bash", "/start.sh"]
