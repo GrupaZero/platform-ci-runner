@@ -6,7 +6,6 @@ MAINTAINER Adrian Skierniewski <adrian.skierniewski@gmail.com>
 ENV HOME /root
 ENV TERM xterm
 ENV DEBIAN_FRONTEND noninteractive
-ENV DOCKER_COMPOSE_VERSION 1.19.0
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
 RUN apt-get update && \
@@ -18,13 +17,15 @@ RUN apt-get update && \
     LANG=C.UTF-8 add-apt-repository "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
-      docker-ce \
       sudo \
       curl \
       nano \
       git \
       iproute2 \
       gettext \
+      supervisor \
+      nginx \
+      php7.2-fpm \
       php7.2-cli \
       php7.2-common \
       php7.2-curl \
@@ -40,8 +41,6 @@ RUN apt-get update && \
       php7.2-redis \
       php7.2-zip \
       google-chrome-stable && \
-    curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose && \
-    chmod +x /usr/local/bin/docker-compose && \
     apt-get remove --purge -y software-properties-common apt-transport-https && \
     apt-get autoremove -y && \
     apt-get clean && \
@@ -55,10 +54,30 @@ RUN apt-get update && \
     rm -rf /usr/share/man/?? && \
     rm -rf /usr/share/man/??_*
 
-COPY entrypoint.sh /usr/local/bin/
+# Nginx config
+ADD ./cfg/nginx.conf /etc/nginx/nginx.conf
+
+# PHP-FPM configs
+ADD ./cfg/php-fpm.conf /etc/php/7.2/fpm/php-fpm.conf
+ADD ./cfg/php.ini /etc/php/7.2/fpm/php.ini
+ADD ./cfg/pool.d/www.conf /etc/php/7.2/fpm/pool.d/www.conf
+ADD ./cfg/xdebug.ini ./etc/php/7.2/mods-available/xdebug.ini
+
+# Supervisor config
+ADD ./cfg/supervisord.conf /etc/supervisord.conf
+
+# Start script
+ADD ./start.sh /start.sh
+
+# Add site template
+ADD ./cfg/site.conf /etc/nginx/conf.d/site.template
 
 RUN /usr/bin/curl -sS https://getcomposer.org/installer | /usr/bin/php \
-  && /bin/mv composer.phar /usr/local/bin/composer
+  && /bin/mv composer.phar /usr/local/bin/composer \
+  && chmod +x /start.sh \
+  && mv /var/www/html /var/www/public \
+  && mv /var/www/public/index.nginx-debian.html /var/www/public/index.html
 
-ENTRYPOINT ["entrypoint.sh"]
-CMD ["sh"]
+EXPOSE 80
+
+CMD ["/bin/bash", "/start.sh"]
