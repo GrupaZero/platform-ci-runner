@@ -19,10 +19,10 @@ RUN apt-get update && \
     LANG=C.UTF-8 add-apt-repository "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
+      docker-ce \
       sudo \
       nano \
       git \
-      iproute2 \
       gettext \
       supervisor \
       nginx \
