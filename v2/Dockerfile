@@ -10,16 +10,16 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 ENV LARAVEL_LOG_STREAM="/tmp/laravel.log"
 
 RUN apt-get update && \
-    apt-get install -y software-properties-common apt-transport-https wget --no-install-recommends && \
+    apt-get install -y software-properties-common apt-transport-https wget curl --no-install-recommends && \
     wget -q -O - https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
     wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+    curl -sL https://deb.nodesource.com/setup_8.x | bash - && \
     LANG=C.UTF-8 add-apt-repository ppa:ondrej/php && \
     LANG=C.UTF-8 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && \
     LANG=C.UTF-8 add-apt-repository "deb [arch=amd64] https://dl.google.com/linux/chrome/deb/ stable main" && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
       sudo \
-      curl \
       nano \
       git \
       iproute2 \
@@ -41,6 +41,8 @@ RUN apt-get update && \
       php7.2-xml \
       php7.2-redis \
       php7.2-zip \
+      build-essential \
+      nodejs \
       google-chrome-stable && \
     apt-get remove --purge -y software-properties-common apt-transport-https && \
     apt-get autoremove -y && \
