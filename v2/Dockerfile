@@ -23,6 +23,7 @@ RUN apt-get update && \
       sudo \
       nano \
       git \
+      iproute2 \
       gettext \
       supervisor \
       nginx \
